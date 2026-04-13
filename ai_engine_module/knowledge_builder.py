@@ -67,7 +67,7 @@ class AgKnowledgeBase:
 
         return results['documents'][0][0], results['metadatas'][0][0]
     
-    #Execution block for testing Vector DB
+#Execution block for testing Vector DB
 if __name__ == "__main__":
     #1. Instantiate Vector DB
     vector_db = AgKnowledgeBase()

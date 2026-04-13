@@ -1,7 +1,7 @@
 import os 
 import pandas as pd
 from dotenv import load_dotenv
-from google import genai
+from groq import Groq
 
 from database_module.db_connector import AgTechDBConnector
 from ai_engine_module.knowledge_builder import AgKnowledgeBase
@@ -16,15 +16,23 @@ class GeoRAGAgent:
 
         load_dotenv()  # Load environment variables from .env file
 
-        if not self.use_mock:
-            api_key = os.getenv("GEMINI_API_KEY")
-            if not api_key:
-                raise ValueError("GEMINI_API_KEY not found in environment variables.")
+        self.client = None
+
+        # If API key is present, initialize Gemini client; otherwise, rely on mock mode
+        api_key = os.getenv("GROQ_API_KEY")
+        if api_key:
+            self.client = Groq(api_key=api_key)
+        elif not self.use_mock:
+            print("[WARNING] Try to use real LLM generation without a valid API key. Switch to mock mode.")
             
-            self.client = genai.Client(api_key=api_key)
-        
+        # Initialize our local infrastructure
         self.db = AgTechDBConnector()
-        self.vector_db = AgKnowledgeBase(db_path = "/.ai_engine_module/vector_store")
+        
+        # Self-Healing System
+        self.vector_db = AgKnowledgeBase(db_path="./ai_engine_module/vector_store")
+        if self.vector_db.collection.count() == 0:
+            print("[AGENT SYSTEM] Vector DB is empty or missing. Rebuilding knowledge base...")
+            self.vector_db.build_knowledge()
 
     def _fetch_live_data(self, field_id: str) -> str:
         "Fetches the latest sensor data for a specific field using SQL."
@@ -79,11 +87,14 @@ class GeoRAGAgent:
                 "immediate rescue irrigation is required. (Set USE_MOCK=False to see real LLM output)."
             )
         else:
-            response = self.client.models.generate_content(
-                model = "gemini-2.0-flash",
-                contents= prompt,
+            if not self.client:
+                return "LLM generation is not available. Please check your API key and switch to mock mode if needed."
+
+            response = self.client.chat.completions.create(
+                messages = [{"role": "user", "content": prompt}],
+                model = "llama-3.3-70b-versatile",  # Example model, adjust as needed
             )
-            return f"=== GEMINI AI RESPONSE ===\n{response.text}"
+            return f"=== GROQ AI RESPONSE ===\n{response.choices[0].message.content}"
 
 # Execution block for testing the GeoRAGAgent
 if __name__ == "__main__":

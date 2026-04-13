@@ -3,6 +3,6 @@ SQLAlchemy
 psycopg2-binary
 chromadb
 sentence-transformers
-google-genai
+groq
 python-dotenv
 streamlit

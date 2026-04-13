@@ -44,9 +44,9 @@ pip install -r requirements.txt
 ```
 
 ### 4. Security & Environment Variables
-Create a .env file in the root directory and add your Google AI Studio API key (if you intend to use the real LLM):
+Create a .env file in the root directory and add your Groq API key (if you intend to use the real LLM):
 ```bash
-GEMINI_API_KEY=your_api_key_here
+GROQ_API_KEY=your_api_key_here
 ```
 Ensure .env is added to your .gitignore.
 
