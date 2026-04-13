@@ -32,7 +32,7 @@ Navigate to the database module and start the PostgreSQL container:
 ```bash
 cd database_module
 docker-compose up -d
-
+```
 Note: Wait ~15 seconds on the first boot for the script populate the tablets.
 
 ### 3. Install Python Dependencies
@@ -41,18 +41,21 @@ Install all required dependencies using the provided requirements file:
 
 ```bash
 pip install -r requirements.txt
+```
 
 ### 4. Security & Environment Variables
 Create a .env file in the root directory and add your Google AI Studio API key (if you intend to use the real LLM):
+```bash
 GEMINI_API_KEY=your_api_key_here
-
+```
 Ensure .env is added to your .gitignore.
 
 ### 5. Execute RAG Agent
 Run the main orchestrator script:
+```bash
 python geo_rag_agent.py
-
+```
 By default, the script runs in MOCK MODE (bypassing the LLM API to ensure the architecture works without costs). To test the real AI generation, change USE_MOCK = False inside geo_rag_agent.py.
 
-##💡 Business Impact
+## 💡 Business Impact
 Standard predictive models often lack real-world context. By combining a relational database (which answers what is happening in the field) with a vector database (which answers how to solve it), this architecture ensures that LLM hallucinations are grounded strictly in the company's approved operational manuals.
