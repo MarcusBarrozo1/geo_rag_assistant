@@ -5,3 +5,4 @@ chromadb
 sentence-transformers
 google-genai
 python-dotenv
+streamlit
