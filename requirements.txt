@@ -1,0 +1,7 @@
+pandas
+SQLAlchemy
+psycopg2-binary
+chromadb
+sentence-transformers
+google-genai
+python-dotenv

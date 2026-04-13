@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:latest
+    container_name: agtech_postgres_server
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: agtech_intelligence
+    ports:
+      - "5455:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
